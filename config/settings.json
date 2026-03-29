@@ -1,0 +1,96 @@
+{
+  "system_name": "GPSG - GitHub Project Showcase Generator",
+  "version": "1.0.0",
+  "description": "Multi-agent system for GitHub project README generation, Git workflow automation, and project health analysis",
+
+  "agents": {
+    "triage_agent": {
+      "role": "意图路由官",
+      "phase": 0,
+      "input": "User's natural language input or shortcut command",
+      "output": "TriageResult (scenario, target_path, parameters)"
+    },
+    "architect_agent": {
+      "role": "架构分析员",
+      "phase": "readme-1",
+      "input": "Target repo path + user intent",
+      "output": "ArchitectureAnalysis (tech_stack, file_tree, mermaid_diagram, module_responsibilities)"
+    },
+    "value_agent": {
+      "role": "价值提炼员",
+      "phase": "readme-2",
+      "input": "Target repo path + user intent",
+      "output": "ValueAnalysis (project_positioning, highlights, user_scenarios, evidence_links)"
+    },
+    "setup_agent": {
+      "role": "配置指南员",
+      "phase": "readme-3",
+      "input": "Target repo path",
+      "output": "SetupGuide (prerequisites, install_commands, env_variables, badges, docker_option)"
+    },
+    "merge_agent": {
+      "role": "整合渲染员",
+      "phase": "readme-4",
+      "input": "ArchitectureAnalysis + ValueAnalysis + SetupGuide",
+      "output": "Final README.md"
+    },
+    "git_deploy_agent": {
+      "role": "Git 部署员",
+      "phase": "readme-5",
+      "input": "README.md file path",
+      "output": "PR URL"
+    },
+    "git_auto_agent": {
+      "role": "Git 自动化员",
+      "phase": "git-1",
+      "input": "Git sub-scenario (commit/pr/release/clean) + target repo path",
+      "output": "CommitResult | PRResult | ReleaseResult | CleanupResult"
+    },
+    "dep_health_agent": {
+      "role": "依赖健康检查员",
+      "phase": "health-1",
+      "input": "Target repo path",
+      "output": "DepHealthResult (versions, vulnerabilities, licenses)"
+    },
+    "git_health_agent": {
+      "role": "Git 仓库体检员",
+      "phase": "health-2",
+      "input": "Target repo path",
+      "output": "GitHealthResult (branches, commits, remote sync)"
+    },
+    "code_quality_agent": {
+      "role": "代码质量分析员",
+      "phase": "health-3",
+      "input": "Target repo path",
+      "output": "CodeQualityResult (LOC, docs, tests, config)"
+    },
+    "report_agent": {
+      "role": "报告汇总员",
+      "phase": "health-4",
+      "input": "DepHealth + GitHealth + CodeQuality reports",
+      "output": "Unified health report with grade (A-F)"
+    }
+  },
+
+  "safety": {
+    "banned_git_commands": ["push --force", "reset --hard", "clean -fd"],
+    "banned_file_patterns": [".env", "credentials", "*.key", "*.pem", "*.p12", "id_rsa*", "id_ed25519*"],
+    "require_confirmation": ["branch_delete", "remote_delete", "force_push", "tag_delete"]
+  },
+
+  "workspace": {
+    "root": ".gpsg",
+    "agent_outputs": ".gpsg/agent_outputs/",
+    "merge": ".gpsg/merge/",
+    "final": ".gpsg/final/",
+    "audit": ".gpsg/audit/",
+    "checkpoint": ".gpsg/checkpoint.json"
+  },
+
+  "defaults": {
+    "readme_template": "templates/readme_template.md",
+    "branch_prefix": "gpsg/readme-refresh-",
+    "commit_message": "docs: regenerate README with GPSG",
+    "pr_title": "docs: README refresh"
+  }
+}
